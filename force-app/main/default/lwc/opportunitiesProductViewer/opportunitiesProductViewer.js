@@ -13,11 +13,11 @@ profileError;
 wiredOpportunitiesProductsResults;  
 
 columns = [
-        { label: 'Nom du Produit', fieldName: 'ProductName', type: 'text' },
+        { label: 'Nom du Produit', fieldName: 'Product2.Name', type: 'text' },
         { label: 'Prix Unitaire', fieldName: 'UnitPrice', type: 'number' },
         { label: 'Prix Total', fieldName: 'TotalPrice', type: 'number' },
         { label: 'Quantité', fieldName: 'Quantity', type: 'number' },
-        { label: 'Quantité en Stock', fieldName: 'QuantityInStock__c', type: 'number' }
+        { label: 'Quantité en Stock', fieldName: 'Product2.QuantityInStock__c', type: 'number' }
     ];
 
 

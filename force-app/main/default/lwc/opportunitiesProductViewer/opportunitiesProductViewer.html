@@ -15,10 +15,14 @@
                 <lightning-datatable data={opportunities}
                                      columns={columns}
                                      key-field="Id"
-                                        hide-checkbox-column="false"
-                                     
-                                     >
-                </lightning-datatable>
-            </template>
+                                     hide-checkbox-column="false">
+                 </lightning-datatable>
+           </template>           
+        <template if:true={error}>
+                        
+                            <p> Vous n'avez aucune ligne de produits pour le moment 
+                                <br> 1.veuillez tout d'abord sélectionner un catalogue(Pricebook)
+                                 <br> 2. sélectionner ensuite des produits à ajouter  </p>
+          </template>
     </lightning-card>
 </template>
