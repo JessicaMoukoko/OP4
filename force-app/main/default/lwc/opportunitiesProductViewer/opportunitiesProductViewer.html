@@ -1,6 +1,6 @@
 <template>
     <lightning-card title="Opportunités Produits" icon-name="standard:opportunity">
-            <template if:true={IsAdmin}>
+            <template if:true={isAdmin}>
                 <h2>Vue Administrateur</h2>
                 <lightning-datatable data={opportunities}
                                      columns={columns}
@@ -10,7 +10,7 @@
                                      >
                 </lightning-datatable>
             </template>
-            <template if:true={IsCommercial}>
+            <template if:true={isCommercial}>
                 <h2>Vue Commercial</h2>
                 <lightning-datatable data={opportunities}
                                      columns={columns}
