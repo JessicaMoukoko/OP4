@@ -1,0 +1,24 @@
+<template>
+    <lightning-card title="Opportunités Produits" icon-name="standard:opportunity">
+            <template if:true={IsAdmin}>
+                <h2>Vue Administrateur</h2>
+                <lightning-datatable data={opportunities}
+                                     columns={columns}
+                                     key-field="Id"
+                                     hide-checkbox-column="false"
+                                     
+                                     >
+                </lightning-datatable>
+            </template>
+            <template if:true={IsCommercial}>
+                <h2>Vue Commercial</h2>
+                <lightning-datatable data={opportunities}
+                                     columns={columns}
+                                     key-field="Id"
+                                        hide-checkbox-column="false"
+                                     
+                                     >
+                </lightning-datatable>
+            </template>
+    </lightning-card>
+</template>
