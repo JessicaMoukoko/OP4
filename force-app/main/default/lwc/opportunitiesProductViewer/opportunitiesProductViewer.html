@@ -5,9 +5,7 @@
                 <lightning-datatable data={opportunities}
                                      columns={columns}
                                      key-field="Id"
-                                     hide-checkbox-column="false"
-                                     
-                                     >
+                                     hide-checkbox-column="false">
                 </lightning-datatable>
             </template>
             <template if:true={isCommercial}>
@@ -18,11 +16,17 @@
                                      hide-checkbox-column="false">
                  </lightning-datatable>
            </template>           
+        <template if:true={hasNoProducts}>
+            <p>
+                Vous n'avez aucune ligne de produits pour le moment
+                <br>1. Veuillez d'abord sélectionner un catalogue (Pricebook)
+                <br>2. Puis ajouter des produits à l'opportunité
+            </p>
+        </template>
         <template if:true={error}>
-                        
-                            <p> Vous n'avez aucune ligne de produits pour le moment 
-                                <br> 1.veuillez tout d'abord sélectionner un catalogue(Pricebook)
-                                 <br> 2. sélectionner ensuite des produits à ajouter  </p>
-          </template>
+            <p class="slds-text-color_error">
+                Une erreur est survenue lors du chargement des produits.
+            </p>
+        </template>
     </lightning-card>
 </template>

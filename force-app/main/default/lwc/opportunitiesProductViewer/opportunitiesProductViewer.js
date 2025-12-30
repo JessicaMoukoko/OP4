@@ -21,15 +21,19 @@ columns = [
     ];
 
 
-    @wire(getOpportunityProducts,{ OpportunityId: '$recordId' })
-    wiredOpportunities(result) {
-        this.wiredOpportunitiesProductsResults = result;
-        if (result.data) {
-            this.opportunities = result.data;
-        } else if (result.error) {
-            this.error = result.error;
-        }
+    @wire(getOpportunityProducts, { OpportunityId: '$recordId' })
+wiredOpportunities(result) {
+    this.wiredOpportunitiesProductsResults = result;
+
+    if (result.data) {
+        this.opportunities = result.data;
+        this.error = undefined; 
+    } else if (result.error) {
+        this.error = result.error;
+        this.opportunities = undefined;
     }
+}
+
 
     @wire(getUserProfileName)
 wiredProfile({ data, profileError }) {
@@ -39,5 +43,8 @@ wiredProfile({ data, profileError }) {
     } else if (profileError) {
         this.profileError = profileError;
     }
+}
+get hasNoProducts() {
+    return this.opportunities && this.opportunities.length === 0;
 }
 }
