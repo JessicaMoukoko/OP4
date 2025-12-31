@@ -33,23 +33,6 @@ wiredOpportunities(result) {
     }
 }
 
-connectedCallback() {
-        this.checkUserPermission();
-    }
-
-    checkUserPermission() {
-        isAdminUser()
-            .then(result => {
-                this.isAdmin = result;
-                this.isCommercial = !result;
-            })
-            .catch(error => {
-                console.error('Erreur permission : ', error);
-                this.isAdmin = false;
-                this.isCommercial = true;
-            });
-    }
- /*   
  @wire(isAdminUser,{})
 wiredProfileResults(result2) {
     this.wiredProfileResults = result2;
@@ -64,7 +47,7 @@ wiredProfileResults(result2) {
         this.error = undefined;
     }
 }
-    */
+
 get hasNoProducts() {
     return this.opportunities && this.opportunities.length === 0;
 }
