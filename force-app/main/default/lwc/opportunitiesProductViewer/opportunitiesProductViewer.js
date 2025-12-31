@@ -1,14 +1,15 @@
 import { LightningElement, api, wire  } from 'lwc';  
 import getOpportunityProducts from '@salesforce/apex/OpportunityProductController.getOpportunityProducts';
-
+import isAdminUser from '@salesforce/apex/ProfileController.isAdminUser';
 export default class OpportunitiesProductViewer extends LightningElement {
 
 @api recordId;
-isAdmin = true;
+isAdmin = false;
 isCommercial = false;
 opportunities;
 error;
-wiredOpportunitiesProductsResults;  
+wiredOpportunitiesProductsResults;
+wiredProfileResults;  
 
 columns = [
        { label: 'Nom du Produit', fieldName: 'ProductName__c', type: 'text' },
@@ -32,6 +33,38 @@ wiredOpportunities(result) {
     }
 }
 
+connectedCallback() {
+        this.checkUserPermission();
+    }
+
+    checkUserPermission() {
+        isAdminUser()
+            .then(result => {
+                this.isAdmin = result;
+                this.isCommercial = !result;
+            })
+            .catch(error => {
+                console.error('Erreur permission : ', error);
+                this.isAdmin = false;
+                this.isCommercial = true;
+            });
+    }
+ /*   
+ @wire(isAdminUser,{})
+wiredProfileResults(result2) {
+    this.wiredProfileResults = result2;
+
+    if (result2.data) {
+        this.isAdmin = true;
+        this.isCommercial = undefined;
+        this.error = undefined;
+    } else {
+        this.isCommercial = true;
+        this.isAdmin = undefined;
+        this.error = undefined;
+    }
+}
+    */
 get hasNoProducts() {
     return this.opportunities && this.opportunities.length === 0;
 }

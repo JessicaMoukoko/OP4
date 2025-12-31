@@ -12,6 +12,7 @@ public with sharing class OpportunityProductController {
        Quantity_In_Stock__c
 
             FROM OpportunityLineItem WHERE opportunityId=:opportunityId
+            WITH SECURITY_ENFORCED
         ];
         return opportunitesDesProduits;
     }
