@@ -1,27 +1,25 @@
 import { LightningElement, api, wire  } from 'lwc';  
 import getOpportunityProducts from '@salesforce/apex/OpportunityProductController.getOpportunityProducts';
-import getUserProfileName from '@salesforce/apex/ProfileIdentifier.getUserProfileName';
 
 export default class OpportunitiesProductViewer extends LightningElement {
 
 @api recordId;
-isAdmin = false;
+isAdmin = true;
 isCommercial = false;
 opportunities;
 error;
-profileError;
 wiredOpportunitiesProductsResults;  
 
 columns = [
-        { label: 'Nom du Produit', fieldName: 'Product2.Name', type: 'text' },
+       { label: 'Nom du Produit', fieldName: 'ProductName__c', type: 'text' },
         { label: 'Prix Unitaire', fieldName: 'UnitPrice', type: 'number' },
         { label: 'Prix Total', fieldName: 'TotalPrice', type: 'number' },
         { label: 'Quantité', fieldName: 'Quantity', type: 'number' },
-        { label: 'Quantité en Stock', fieldName: 'Product2.QuantityInStock__c', type: 'number' }
+      { label: 'Quantité en Stock', fieldName: 'Quantity_In_Stock__c', type: 'number' }
     ];
 
 
-    @wire(getOpportunityProducts, { OpportunityId: '$recordId' })
+    @wire(getOpportunityProducts, { opportunityId: '$recordId' })
 wiredOpportunities(result) {
     this.wiredOpportunitiesProductsResults = result;
 
@@ -34,16 +32,6 @@ wiredOpportunities(result) {
     }
 }
 
-
-    @wire(getUserProfileName)
-wiredProfile({ data, profileError }) {
-    if (data) {
-        this.isAdmin = data === 'System Administrator';
-        this.isCommercial = data === 'Custom: Sales Profile';
-    } else if (profileError) {
-        this.profileError = profileError;
-    }
-}
 get hasNoProducts() {
     return this.opportunities && this.opportunities.length === 0;
 }
