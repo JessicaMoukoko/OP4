@@ -1,50 +1,105 @@
-import { LightningElement, api, wire  } from 'lwc';  
+import { LightningElement, api, wire } from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
+import { deleteRecord } from 'lightning/uiRecordApi';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { refreshApex } from '@salesforce/apex';
 import getOpportunityProducts from '@salesforce/apex/OpportunityProductController.getOpportunityProducts';
-import getUserProfileName from '@salesforce/apex/ProfileIdentifier.getUserProfileName';
 
-export default class OpportunitiesProductViewer extends LightningElement {
+export default class OpportunityProductTable extends NavigationMixin(LightningElement) {
 
-@api recordId;
-isAdmin = false;
-isCommercial = false;
-opportunities;
-error;
-profileError;
-wiredOpportunitiesProductsResults;  
+    @api recordId; 
 
-columns = [
-        { label: 'Nom du Produit', fieldName: 'Product2.Name', type: 'text' },
-        { label: 'Prix Unitaire', fieldName: 'UnitPrice', type: 'number' },
-        { label: 'Prix Total', fieldName: 'TotalPrice', type: 'number' },
+    data;
+    error;
+    wiredResult;
+
+    // Colonnes affichées dans le tableau
+    
+    columns = [
+        { label: 'Produit', fieldName: 'ProductName__c', type: 'text' },
+        { label: 'Prix Unitaire', fieldName: 'UnitPrice', type: 'currency' },
         { label: 'Quantité', fieldName: 'Quantity', type: 'number' },
-        { label: 'Quantité en Stock', fieldName: 'Product2.QuantityInStock__c', type: 'number' }
+        { label: 'Total', fieldName: 'TotalPrice', type: 'currency' },
+        {
+            type: 'action',
+            typeAttributes: {
+                rowActions: [
+                    { label: 'Voir produit', name: 'view', iconName: 'utility:preview' },
+                    { label: 'Supprimer', name: 'delete', iconName: 'utility:delete' }
+                ]
+            }
+        }
     ];
 
+    // Données récupérées via la méthode Apex
 
-    @wire(getOpportunityProducts, { OpportunityId: '$recordId' })
-wiredOpportunities(result) {
-    this.wiredOpportunitiesProductsResults = result;
+    @wire(getOpportunityProducts, { opportunityId: '$recordId' })
+    wiredProducts(result) {
+        this.wiredResult = result;
 
-    if (result.data) {
-        this.opportunities = result.data;
-        this.error = undefined; 
-    } else if (result.error) {
-        this.error = result.error;
-        this.opportunities = undefined;
+        if (result.data) {
+            this.data = result.data;
+            this.error = undefined;
+        } else if (result.error) {
+            this.error = result.error;
+            this.data = undefined;
+        }
     }
-}
 
+    
+    // Actions sur les lignes du tableau
 
-    @wire(getUserProfileName)
-wiredProfile({ data, profileError }) {
-    if (data) {
-        this.isAdmin = data === 'System Administrator';
-        this.isCommercial = data === 'Custom: Sales Profile';
-    } else if (profileError) {
-        this.profileError = profileError;
+    handleRowAction(event) {
+        const action = event.detail.action.name;
+        const row = event.detail.row;
+
+        if (action === 'view') {
+            this.viewProduct(row.Product2Id);
+        }
+
+        if (action === 'delete') {
+            this.deleteOpportunityLine(row.Id);
+        }
     }
-}
-get hasNoProducts() {
-    return this.opportunities && this.opportunities.length === 0;
-}
+
+    // Pour Voir un produit
+
+    viewProduct(productId) {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: productId,
+                objectApiName: 'Product2',
+                actionName: 'view'
+            }
+        });
+    }
+
+    // Supprimer une ligne d’opportunité
+   
+    deleteOpportunityLine(lineItemId) {
+        deleteRecord(lineItemId)
+            .then(() => {
+                this.showToast('Succès', 'Produit supprimé', 'success');
+                refreshApex(this.wiredResult);
+            })
+            .catch(error => {
+                this.showToast(
+                    'Erreur',
+                    error.body?.message || 'Impossible de supprimer',
+                    'error'
+                );
+            });
+    }
+
+    // Afficher un message Toast
+    showToast(title, message, variant) {
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title,
+                message,
+                variant
+            })
+        );
+    }
 }

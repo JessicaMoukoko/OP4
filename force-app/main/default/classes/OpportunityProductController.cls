@@ -1,17 +1,17 @@
 public with sharing class OpportunityProductController {
 
-    @AuraEnabled(cacheable=false)
-    public static List<OpportunityLineItem> getOpportunityProducts(String OpportunityId) {
+    @AuraEnabled(cacheable=true)
+    public static List<OpportunityLineItem> getOpportunityProducts(String opportunityId) {
 
- List<OpportunityLineItem> OpportunitesDesProduits = [
+ List<OpportunityLineItem> opportunitesDesProduits = [
             SELECT Quantity,
                 UnitPrice,
                 TotalPrice,
-                Product2.Name,
-                Product2.QuantityInStock__c
+                ProductName__c,
+               Quantity_In_Stock__c
 
-            FROM OpportunityLineItem WHERE opportunityId=:OpportunityId
+            FROM OpportunityLineItem WHERE opportunityId=:opportunityId
         ];
-        return OpportunitesDesProduits;
+        return opportunitesDesProduits;
     }
 }
