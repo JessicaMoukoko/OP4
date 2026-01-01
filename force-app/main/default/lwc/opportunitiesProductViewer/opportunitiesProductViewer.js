@@ -1,7 +1,10 @@
 import { LightningElement, api, wire  } from 'lwc';  
 import getOpportunityProducts from '@salesforce/apex/OpportunityProductController.getOpportunityProducts';
 import isAdminUser from '@salesforce/apex/ProfileController.isAdminUser';
+
+
 export default class OpportunitiesProductViewer extends LightningElement {
+
 
 @api recordId;
 isAdmin = false;
@@ -10,13 +13,38 @@ opportunities;
 error;
 wiredOpportunitiesProductsResults;
 wiredProfileResults;  
-
+/*
+ACTIONS = [
+    { label: 'Supprimer', name: 'delete' }
+];
+*/
 columns = [
        { label: 'Nom du Produit', fieldName: 'ProductName__c', type: 'text' },
         { label: 'Prix Unitaire', fieldName: 'UnitPrice', type: 'number' },
         { label: 'Prix Total', fieldName: 'TotalPrice', type: 'number' },
         { label: 'Quantité', fieldName: 'Quantity', type: 'number' },
-      { label: 'Quantité en Stock', fieldName: 'Quantity_In_Stock__c', type: 'number' }
+      { label: 'Quantité en Stock', fieldName: 'Quantity_In_Stock__c', type: 'number' },
+      {
+        label: 'Supprimer',
+        type: 'button-icon',
+        initialWidth: 90,
+        typeAttributes: {
+            iconName: 'utility:delete',
+            name: 'delete',
+            title: 'Supprimer',
+            variant: 'border-filled',
+            alternativeText: 'Supprimer'
+        } },
+    { label: 'voir produit',
+         type: 'button-icon', 
+            initialWidth: 90,
+         typeAttributes: { 
+            iconName: 'utility:preview',
+             name: 'preview ',
+              title: 'Voir Produit',
+                variant: 'brand',
+            alternativeText: 'Voir Produit'
+         } }
     ];
 
 
@@ -51,4 +79,23 @@ wiredProfileResults(result2) {
 get hasNoProducts() {
     return this.opportunities && this.opportunities.length === 0;
 }
+
+handleRowAction(event) {
+    const actionName = event.detail.action.name;
+    const row = event.detail.row;
+
+    if (actionName === 'delete') {
+        this.deleteOpportunityProduct(row.Id);
+    }
+}
+/*
+handleRowAction(event) {
+    const actionName = event.detail.action.name;
+    const row = event.detail.row;
+
+    if (actionName === 'delete') {
+        this.deleteOpportunityProduct(row.Id);
+    }
+}
+    */
 }

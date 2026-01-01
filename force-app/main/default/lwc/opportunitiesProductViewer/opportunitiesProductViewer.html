@@ -5,19 +5,22 @@
                 <lightning-datatable data={opportunities}
                                      columns={columns}
                                      key-field="Id"
-                                     hide-checkbox-column="false">
+                                     hide-checkbox-column="false"
+                                     onrowaction={handleRowAction}>
                 </lightning-datatable>
-            </template>
+                </template>
             <template if:true={isCommercial}>
                 <h2>Vue Commercial</h2>
                 <lightning-datatable data={opportunities}
                                      columns={columns}
                                      key-field="Id"
-                                     hide-checkbox-column="false">
+                                     hide-checkbox-column="false"
+                                     onrowaction={handleRowAction}>
                  </lightning-datatable>
            </template>           
         <template if:true={hasNoProducts}>
             <p>
+                <br>
                 Vous n'avez aucune ligne de produits pour le moment
                 <br>1. Veuillez d'abord sélectionner un catalogue (Pricebook)
                 <br>2. Puis ajouter des produits à l'opportunité
