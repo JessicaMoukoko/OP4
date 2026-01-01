@@ -36,11 +36,12 @@ columns = [
             alternativeText: 'Supprimer'
         } },
     { label: 'voir produit',
-         type: 'button-icon', 
-            initialWidth: 90,
+         type: 'button', 
+            initialWidth: 160,
          typeAttributes: { 
+            label: 'view Product',
             iconName: 'utility:preview',
-             name: 'preview ',
+             name: 'preview',
               title: 'Voir Produit',
                 variant: 'brand',
             alternativeText: 'Voir Produit'
