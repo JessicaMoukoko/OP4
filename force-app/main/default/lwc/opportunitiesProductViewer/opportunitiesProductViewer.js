@@ -1,9 +1,12 @@
 import { LightningElement, api, wire  } from 'lwc';  
 import getOpportunityProducts from '@salesforce/apex/OpportunityProductController.getOpportunityProducts';
+import deleteOpportunityProduct from '@salesforce/apex/OpportunityProductController.deleteOpportunityProduct';
 import isAdminUser from '@salesforce/apex/ProfileController.isAdminUser';
+import { NavigationMixin } from 'lightning/navigation';
+import { refreshApex } from '@salesforce/apex';
 
 
-export default class OpportunitiesProductViewer extends LightningElement {
+export default class OpportunitiesProductViewer extends  NavigationMixin(LightningElement)  {
 
 
 @api recordId;
@@ -13,12 +16,8 @@ opportunities;
 error;
 wiredOpportunitiesProductsResults;
 wiredProfileResults;  
-/*
-ACTIONS = [
-    { label: 'Supprimer', name: 'delete' }
-];
-*/
-columns = [
+
+columnsCommercial = [
        { label: 'Nom du Produit', fieldName: 'ProductName__c', type: 'text' },
         { label: 'Prix Unitaire', fieldName: 'UnitPrice', type: 'number' },
         { label: 'Prix Total', fieldName: 'TotalPrice', type: 'number' },
@@ -34,12 +33,29 @@ columns = [
             title: 'Supprimer',
             variant: 'border-filled',
             alternativeText: 'Supprimer'
+        } }];
+
+    columnsAdministrateur = [ { label: 'Nom du Produit', fieldName: 'ProductName__c', type: 'text' },
+        { label: 'Prix Unitaire', fieldName: 'UnitPrice', type: 'number' },
+        { label: 'Prix Total', fieldName: 'TotalPrice', type: 'number' },
+        { label: 'Quantité', fieldName: 'Quantity', type: 'number' },
+      { label: 'Quantité en Stock', fieldName: 'Quantity_In_Stock__c', type: 'number' },
+      {
+        label: 'Supprimer',
+        type: 'button-icon',
+        initialWidth: 90,
+        typeAttributes: {
+            iconName: 'utility:delete',
+            name: 'delete',
+            title: 'Supprimer',
+            variant: 'border-filled',
+            alternativeText: 'Supprimer'
         } },
-    { label: 'voir produit',
+    { label: 'Voir Produit',
          type: 'button', 
             initialWidth: 160,
          typeAttributes: { 
-            label: 'view Product',
+            label: 'View Product',
             iconName: 'utility:preview',
              name: 'preview',
               title: 'Voir Produit',
@@ -50,53 +66,56 @@ columns = [
 
 
     @wire(getOpportunityProducts, { opportunityId: '$recordId' })
-wiredOpportunities(result) {
-    this.wiredOpportunitiesProductsResults = result;
-
-    if (result.data) {
-        this.opportunities = result.data;
-        this.error = undefined; 
-    } else if (result.error) {
-        this.error = result.error;
-        this.opportunities = undefined;
+    wiredOpportunities ( result) {
+     this.wiredOpportunitiesProductsResults = result;
+        if (result.data) {
+            this.opportunities = result.data;
+            this.error = undefined;
+        } else if (result.error) {
+            this.error = result.error;
+            this.opportunities = undefined;
+        }
     }
-}
 
- @wire(isAdminUser,{})
-wiredProfileResults(result2) {
-    this.wiredProfileResults = result2;
-
-    if (result2.data) {
-        this.isAdmin = true;
-        this.isCommercial = undefined;
-        this.error = undefined;
-    } else {
-        this.isCommercial = true;
-        this.isAdmin = undefined;
-        this.error = undefined;
+ @wire(isAdminUser)
+    wiredProfileResults({ data }) {
+        this.isAdmin = data === true;
+        this.isCommercial = data !== true;
     }
-}
 
 get hasNoProducts() {
     return this.opportunities && this.opportunities.length === 0;
 }
 
+
 handleRowAction(event) {
     const actionName = event.detail.action.name;
     const row = event.detail.row;
 
     if (actionName === 'delete') {
-        this.deleteOpportunityProduct(row.Id);
+        this.handleDelete(row.Id);
+    } 
+    else if (actionName === 'preview') {
+        this.navigateToProduct(row.IdDuProduit__c);
     }
 }
-/*
-handleRowAction(event) {
-    const actionName = event.detail.action.name;
-    const row = event.detail.row;
-
-    if (actionName === 'delete') {
-        this.deleteOpportunityProduct(row.Id);
+ handleDelete(opportunityLineItemId) {
+        deleteOpportunityProduct({ opportunityLineItemId: opportunityLineItemId })
+            .then(() => {
+                refreshApex(this.wiredOpportunitiesProductsResults);
+            })
+            .catch(error => {
+                console.error('Erreur suppression :', error);
+            });
     }
-}
-    */
-}
+navigateToProduct(IdDuProduit__c) {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: IdDuProduit__c,
+                objectApiName: 'OpportunityLineItem',
+                actionName: 'view'
+            }
+        });
+    }
+    }

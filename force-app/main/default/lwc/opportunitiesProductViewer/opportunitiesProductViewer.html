@@ -3,7 +3,7 @@
             <template if:true={isAdmin}>
                 <h2>Vue Administrateur</h2>
                 <lightning-datatable data={opportunities}
-                                     columns={columns}
+                                     columns={columnsAdministrateur}
                                      key-field="Id"
                                      hide-checkbox-column="false"
                                      onrowaction={handleRowAction}>
@@ -12,7 +12,7 @@
             <template if:true={isCommercial}>
                 <h2>Vue Commercial</h2>
                 <lightning-datatable data={opportunities}
-                                     columns={columns}
+                                     columns={columnsCommercial}
                                      key-field="Id"
                                      hide-checkbox-column="false"
                                      onrowaction={handleRowAction}>
