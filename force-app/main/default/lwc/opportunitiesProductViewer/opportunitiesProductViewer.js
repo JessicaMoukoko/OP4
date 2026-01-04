@@ -16,12 +16,17 @@ opportunities;
 error;
 wiredOpportunitiesProductsResults;
 wiredProfileResults;  
+quantityProblem = false;
 
 columnsCommercial = [
        { label: 'Nom du Produit', fieldName: 'ProductName__c', type: 'text' },
         { label: 'Prix Unitaire', fieldName: 'UnitPrice', type: 'number' },
         { label: 'Prix Total', fieldName: 'TotalPrice', type: 'number' },
-        { label: 'Quantité', fieldName: 'Quantity', type: 'number' },
+        { label: 'Quantité', fieldName: 'Quantity', type: 'number',
+            cellAttributes: { 
+                class: { fieldName: 'quantityClass' }
+            }
+         },
       { label: 'Quantité en Stock', fieldName: 'Quantity_In_Stock__c', type: 'number' },
       {
         label: 'Supprimer',
@@ -38,7 +43,11 @@ columnsCommercial = [
     columnsAdministrateur = [ { label: 'Nom du Produit', fieldName: 'ProductName__c', type: 'text' },
         { label: 'Prix Unitaire', fieldName: 'UnitPrice', type: 'number' },
         { label: 'Prix Total', fieldName: 'TotalPrice', type: 'number' },
-        { label: 'Quantité', fieldName: 'Quantity', type: 'number' },
+        { label: 'Quantité', fieldName: 'Quantity', type: 'number',
+            cellAttributes: { 
+                class: { fieldName: 'quantityClass' }
+            }
+         },
       { label: 'Quantité en Stock', fieldName: 'Quantity_In_Stock__c', type: 'number' },
       {
         label: 'Supprimer',
@@ -66,16 +75,23 @@ columnsCommercial = [
 
 
     @wire(getOpportunityProducts, { opportunityId: '$recordId' })
-    wiredOpportunities ( result) {
-     this.wiredOpportunitiesProductsResults = result;
-        if (result.data) {
-            this.opportunities = result.data;
-            this.error = undefined;
-        } else if (result.error) {
-            this.error = result.error;
-            this.opportunities = undefined;
-        }
+wiredOpportunities(result) {
+    this.wiredOpportunitiesProductsResults = result;
+    if (result.data) {
+        // Créer une copie immuable de chaque ligne
+        this.opportunities = result.data.map(row => {
+            return {
+                ...row, // copie toutes les propriétés existantes
+                quantityClass: row.Quantity > row.Quantity_In_Stock__c ? 'slds-theme_error slds-text-title_bold' : ''
+            };
+           
+        });
+        this.error = undefined;
+    } else if (result.error) {
+        this.error = result.error;
+        this.opportunities = undefined;
     }
+}
 
  @wire(isAdminUser)
     wiredProfileResults({ data }) {

@@ -32,6 +32,14 @@
             </p>
         </template>
         
-    
+            <template if:true={quantityProblem}>
+                <p class="slds-text-color_error">
+                   Vous avez au moins une ligne avec un problème de quantité , veuillez supprimer cette ligne ou
+         réduire sa quantité.<br> 
+         Si vous avez absolument besoin de plus de produits, veuillez contacter votre Système administrateur.
+                </p>
+                
+            </template>
+       
     </lightning-card>
 </template>
