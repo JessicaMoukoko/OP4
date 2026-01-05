@@ -1,5 +1,11 @@
-.red-text {
-    background-color: #fdecea !important;
-    color: #c23934 !important;
-    font-weight: bold;
+.orange-text {
+    background-color: #de7021 !important;
+    color: #1b1b1b !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    border-radius: 5px !important;
+    margin-bottom : 15px !important;
 }
+

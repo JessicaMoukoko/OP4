@@ -16,7 +16,6 @@ opportunities;
 error;
 wiredOpportunitiesProductsResults;
 wiredProfileResults;  
-quantityProblem = false;
 
 columnsCommercial = [
        { label: 'Nom du Produit', fieldName: 'ProductName__c', type: 'text' },
@@ -74,24 +73,38 @@ columnsCommercial = [
     ];
 
 
-    @wire(getOpportunityProducts, { opportunityId: '$recordId' })
+   @wire(getOpportunityProducts, { opportunityId: '$recordId' })
 wiredOpportunities(result) {
     this.wiredOpportunitiesProductsResults = result;
+
     if (result.data) {
-        // Créer une copie immuable de chaque ligne
+
+        let quantityProblem = false;
+
         this.opportunities = result.data.map(row => {
+            const hasProblem = row.Quantity > row.Quantity_In_Stock__c;
+
+            if (hasProblem) {
+                quantityProblem = true;
+            }
+
             return {
-                ...row, // copie toutes les propriétés existantes
-                quantityClass: row.Quantity > row.Quantity_In_Stock__c ? 'slds-theme_error slds-text-title_bold' : ''
+                ...row,
+                quantityClass: hasProblem
+                    ? 'slds-theme_error slds-text-title_bold'
+                    : ''
             };
-           
         });
+
+        this.quantityProblem = quantityProblem;
         this.error = undefined;
+
     } else if (result.error) {
         this.error = result.error;
         this.opportunities = undefined;
     }
 }
+
 
  @wire(isAdminUser)
     wiredProfileResults({ data }) {
