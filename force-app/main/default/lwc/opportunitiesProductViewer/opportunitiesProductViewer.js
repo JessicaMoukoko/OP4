@@ -4,6 +4,18 @@ import deleteOpportunityProduct from '@salesforce/apex/OpportunityProductControl
 import isAdminUser from '@salesforce/apex/ProfileController.isAdminUser';
 import { NavigationMixin } from 'lightning/navigation';
 import { refreshApex } from '@salesforce/apex';
+import Delete from '@salesforce/label/c.Delete';
+import ViewProduct from '@salesforce/label/c.ViewProduct';
+import ErrorMessageFlow from '@salesforce/label/c.ErrorMessageFlow';
+import HasNoProducts from '@salesforce/label/c.HasNoProducts';
+import OpportunityProducts from '@salesforce/label/c.OpportunityProducts';
+import OrangeMessageError from '@salesforce/label/c.OrangeMessageError';
+import productName from '@salesforce/label/c.productName';
+import UnitPrice from '@salesforce/label/c.UnitPrice';
+import ProductQuantity from '@salesforce/label/c.ProductQuantity';
+import totalPrice from '@salesforce/label/c.totalPrice';
+import quantityInStock from '@salesforce/label/c.quantityInStock';
+import viewProductButton from '@salesforce/label/c.viewProductButton';
 
 
 export default class OpportunitiesProductViewer extends  NavigationMixin(LightningElement)  {
@@ -11,24 +23,26 @@ export default class OpportunitiesProductViewer extends  NavigationMixin(Lightni
 
 @api recordId;
 isAdmin = false;
-isCommercial = false;
-opportunities;
+opportunitiesProduct;
 error;
 wiredOpportunitiesProductsResults;
-wiredProfileResults;  
+wiredProfileResults;
+MessageOrange = OrangeMessageError ;
+PasdeProduit = HasNoProducts ;
+titlecard = OpportunityProducts;
 
 columnsCommercial = [
-       { label: 'Nom du Produit', fieldName: 'ProductName__c', type: 'text' },
-        { label: 'Prix Unitaire', fieldName: 'UnitPrice', type: 'number' },
-        { label: 'Prix Total', fieldName: 'TotalPrice', type: 'number' },
-        { label: 'Quantité', fieldName: 'Quantity', type: 'number',
+       { label: productName, fieldName: 'ProductName__c', type: 'text' },
+        { label: UnitPrice, fieldName: 'UnitPrice', type: 'number' },
+        { label: totalPrice, fieldName: 'TotalPrice', type: 'number' },
+        { label: ProductQuantity, fieldName: 'Quantity', type: 'number',
             cellAttributes: { 
                 class: { fieldName: 'quantityClass' }
             }
          },
-      { label: 'Quantité en Stock', fieldName: 'Quantity_In_Stock__c', type: 'number' },
+      { label: quantityInStock, fieldName: 'Quantity_In_Stock__c', type: 'number' },
       {
-        label: 'Supprimer',
+        label: Delete,
         type: 'button-icon',
         initialWidth: 90,
         typeAttributes: {
@@ -39,17 +53,17 @@ columnsCommercial = [
             alternativeText: 'Supprimer'
         } }];
 
-    columnsAdministrateur = [ { label: 'Nom du Produit', fieldName: 'ProductName__c', type: 'text' },
-        { label: 'Prix Unitaire', fieldName: 'UnitPrice', type: 'number' },
-        { label: 'Prix Total', fieldName: 'TotalPrice', type: 'number' },
-        { label: 'Quantité', fieldName: 'Quantity', type: 'number',
+    columnsAdministrateur = [ { label: productName, fieldName: 'ProductName__c', type: 'text' },
+        { label: UnitPrice, fieldName: 'UnitPrice', type: 'number' },
+        { label: totalPrice, fieldName: 'TotalPrice', type: 'number' },
+        { label: ProductQuantity, fieldName: 'Quantity', type: 'number',
             cellAttributes: { 
                 class: { fieldName: 'quantityClass' }
             }
          },
-      { label: 'Quantité en Stock', fieldName: 'Quantity_In_Stock__c', type: 'number' },
+      { label: quantityInStock, fieldName: 'Quantity_In_Stock__c', type: 'number' },
       {
-        label: 'Supprimer',
+        label: Delete,
         type: 'button-icon',
         initialWidth: 90,
         typeAttributes: {
@@ -59,11 +73,11 @@ columnsCommercial = [
             variant: 'border-filled',
             alternativeText: 'Supprimer'
         } },
-    { label: 'Voir Produit',
+    { label: ViewProduct,
          type: 'button', 
             initialWidth: 160,
          typeAttributes: { 
-            label: 'View Product',
+            label: viewProductButton,
             iconName: 'utility:preview',
              name: 'preview',
               title: 'Voir Produit',
@@ -80,19 +94,16 @@ wiredOpportunities(result) {
     if (result.data) {
 
         let quantityProblem = false;
-
-        this.opportunities = result.data.map(row => {
+        // on créé une nouvelle version de chaque ligne avec la classe CSS appropriée
+        this.opportunitiesProduct = result.data.map(row => {
             const hasProblem = row.Quantity > row.Quantity_In_Stock__c;
 
             if (hasProblem) {
                 quantityProblem = true;
             }
-
+            // on retourne une nouvelle version de la ligne avec la classe CSS
             return {
-                ...row,
-                quantityClass: hasProblem
-                    ? 'slds-theme_error slds-text-title_bold'
-                    : ''
+                ...row,quantityClass: hasProblem ? 'slds-theme_error slds-text-title_bold' : ''
             };
         });
 
@@ -101,7 +112,7 @@ wiredOpportunities(result) {
 
     } else if (result.error) {
         this.error = result.error;
-        this.opportunities = undefined;
+        this.opportunitiesProduct = undefined;
     }
 }
 
@@ -109,11 +120,10 @@ wiredOpportunities(result) {
  @wire(isAdminUser)
     wiredProfileResults({ data }) {
         this.isAdmin = data === true;
-        this.isCommercial = data !== true;
     }
 
 get hasNoProducts() {
-    return this.opportunities && this.opportunities.length === 0;
+    return this.opportunitiesProduct && this.opportunitiesProduct.length === 0;
 }
 
 

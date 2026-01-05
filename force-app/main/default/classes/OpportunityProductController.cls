@@ -17,6 +17,7 @@ public with sharing class OpportunityProductController {
         ];
         return ProduitsDeLopportunite;
     }
+    
     @AuraEnabled
 public static void deleteOpportunityProduct(Id opportunityLineItemId) {
     delete [SELECT Id FROM OpportunityLineItem WHERE Id = :opportunityLineItemId];
