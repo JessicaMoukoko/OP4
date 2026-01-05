@@ -3,7 +3,7 @@ public with sharing class OpportunityProductController {
     @AuraEnabled(cacheable=true)
     public static List<OpportunityLineItem> getOpportunityProducts(String opportunityId) {
 
- List<OpportunityLineItem> opportunitesDesProduits = [
+ List<OpportunityLineItem> ProduitsDeLopportunite = [
             SELECT Id,
                 Quantity,
                 UnitPrice,
@@ -15,7 +15,7 @@ public with sharing class OpportunityProductController {
             FROM OpportunityLineItem WHERE opportunityId=:opportunityId
             WITH SECURITY_ENFORCED
         ];
-        return opportunitesDesProduits;
+        return ProduitsDeLopportunite;
     }
     @AuraEnabled
 public static void deleteOpportunityProduct(Id opportunityLineItemId) {
