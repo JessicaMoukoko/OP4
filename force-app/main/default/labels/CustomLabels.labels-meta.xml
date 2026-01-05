@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Delete</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete</shortDescription>
+        <value>Delete</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMessageFlow</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error Flow</shortDescription>
+        <value>Your opportunity cannot be updated because you have a quantity problem on your lines.</value>
+    </labels>
+    <labels>
+        <fullName>HasNoProducts</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>has no products</shortDescription>
+        <value>You don&apos;t have any product lines at the moment. 
+                1. First select a Catalog (Pricebook)
+                2. Then select the products you wish to add.</value>
+    </labels>
+    <labels>
+        <fullName>OpportunityProducts</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Opportunity products</shortDescription>
+        <value>Opportunity products</value>
+    </labels>
+    <labels>
+        <fullName>OrangeMessageError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error Message in Orange</shortDescription>
+        <value>You have at least one line with a quantity problem, please delete this line or reduce its quantity.
+If you absolutely need more products, please contact your system administrator.</value>
+    </labels>
+    <labels>
+        <fullName>ProductQuantity</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Quantity of the Product</shortDescription>
+        <value>Quantity</value>
+    </labels>
+    <labels>
+        <fullName>UnitPrice</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Unitary Price</shortDescription>
+        <value>Unitary Price</value>
+    </labels>
+    <labels>
+        <fullName>ViewProduct</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>View Product</shortDescription>
+        <value>See product</value>
+    </labels>
+    <labels>
+        <fullName>productName</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Name of the Product</shortDescription>
+        <value>Product Name</value>
+    </labels>
+    <labels>
+        <fullName>quantityInStock</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>quantity in Stock</shortDescription>
+        <value>Quantity in Stock</value>
+    </labels>
+    <labels>
+        <fullName>totalPrice</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Total Price</shortDescription>
+        <value>Total Price</value>
+    </labels>
+    <labels>
+        <fullName>viewProductButton</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>viewProductButton</shortDescription>
+        <value>View Product</value>
+    </labels>
+</CustomLabels>

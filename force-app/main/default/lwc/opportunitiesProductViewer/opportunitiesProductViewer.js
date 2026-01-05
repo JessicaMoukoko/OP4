@@ -117,7 +117,7 @@ wiredOpportunities(result) {
 }
 
 
- @wire(isAdminUser)
+ @wire(isAdminUser, { userId: '$UserId' })
     wiredProfileResults({ data }) {
         this.isAdmin = data === true;
     }
