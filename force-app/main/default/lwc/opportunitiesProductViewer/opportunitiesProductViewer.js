@@ -6,7 +6,6 @@ import { NavigationMixin } from 'lightning/navigation';
 import { refreshApex } from '@salesforce/apex';
 import Delete from '@salesforce/label/c.Delete';
 import ViewProduct from '@salesforce/label/c.ViewProduct';
-import ErrorMessageFlow from '@salesforce/label/c.ErrorMessageFlow';
 import HasNoProducts from '@salesforce/label/c.HasNoProducts';
 import OpportunityProducts from '@salesforce/label/c.OpportunityProducts';
 import OrangeMessageError from '@salesforce/label/c.OrangeMessageError';
@@ -16,13 +15,19 @@ import ProductQuantity from '@salesforce/label/c.ProductQuantity';
 import totalPrice from '@salesforce/label/c.totalPrice';
 import quantityInStock from '@salesforce/label/c.quantityInStock';
 import viewProductButton from '@salesforce/label/c.viewProductButton';
+import USER_ID from '@salesforce/user/Id';
 
 
 export default class OpportunitiesProductViewer extends  NavigationMixin(LightningElement)  {
 
+userId; // doit être initialisé quelque part avant le wire
 
+connectedCallback() {
+    this.userId = USER_ID; // ou une valeur récupérée d’Apex ou d’un event
+}
 @api recordId;
 isAdmin = false;
+isCommercial = false;
 opportunitiesProduct;
 error;
 wiredOpportunitiesProductsResults;
@@ -116,14 +121,23 @@ wiredOpportunities(result) {
     }
 }
 
-
- @wire(isAdminUser, { userId: '$UserId' })
+@wire(isAdminUser, { userId: '$userId' })
     wiredProfileResults({ data }) {
         this.isAdmin = data === true;
+        this.isCommercial = data !== true;
     }
 
 get hasNoProducts() {
     return this.opportunitiesProduct && this.opportunitiesProduct.length === 0;
+}
+
+
+get isCommercialTable() {
+    return this.isCommercial && !this.hasNoProducts;
+}
+
+get isAdminTable() {
+    return this.isAdmin && !this.hasNoProducts;
 }
 
 
@@ -157,4 +171,16 @@ navigateToProduct(IdDuProduit__c) {
             }
         });
     }
-    }
+
+    renderedCallback() {
+    console.log('products:', this.opportunitiesProduct);
+    console.log('length:', this.opportunitiesProduct?.length);
+    console.log('hasNoProducts:', this.hasNoProducts);
+    console.log('isAdmin:', this.isAdmin);
+    console.log('isCommercial:', this.isCommercial);
+    console.log('isAdminTable:', this.isAdminTable);
+    console.log('isCommercialTable:', this.isCommercialTable);
+    console.log('userId:', this.userId);
+}
+
+}

@@ -36,17 +36,13 @@ Product2 product = new Product2(
     }
 
     // Crée un PricebookEntry pour un produit dans le Pricebook Standard
+
     public static PricebookEntry createPricebookEntry(Product2 product) {
-        Pricebook2 standardPb = [
-            SELECT Id
-            FROM Pricebook2
-            WHERE IsStandard = true
-            LIMIT 1
-        ];
+        Id standardPbId = Test.getStandardPricebookId();
 
         PricebookEntry pbe = new PricebookEntry(
             Product2Id = product.Id,
-            Pricebook2Id = standardPb.Id,
+            Pricebook2Id = standardPbId,
             UnitPrice = 30000,
             IsActive = true
         );
@@ -54,20 +50,17 @@ Product2 product = new Product2(
         return pbe;
     }
 // Crée une Opportunity avec le Pricebook Standard
+
     public static Opportunity createOpportunity() {
         // Récupérer le Pricebook Standard
-        Pricebook2 standardPb = [
-            SELECT Id
-            FROM Pricebook2
-            WHERE IsStandard = true
-            LIMIT 1
-        ];
+
+         Id standardPbId = Test.getStandardPricebookId();
 
         Opportunity opp = new Opportunity(
-            Name = 'Test Opportunity ' + System.currentTimeMillis(),
+            Name = 'Test Opportunity ',
             CloseDate = Date.today(),
             StageName = 'Prospecting',
-            Pricebook2Id = standardPb.Id // Obligatoire !
+            Pricebook2Id = standardPbId // Obligatoire !
         );
         insert opp;
         return opp;

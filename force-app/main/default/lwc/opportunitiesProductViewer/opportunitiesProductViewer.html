@@ -9,29 +9,33 @@
                 
                 
             </template>
-            <template if:true= {isAdmin}>
-                
+            <template if:true= {isAdminTable}>
+               
                 <lightning-datatable data= {opportunitiesProduct}
                                      columns= {columnsAdministrateur}
                                      key-field="Id"
                                      hide-checkbox-column="false"
                                      onrowaction= {handleRowAction}>
                 </lightning-datatable>
+              
                 </template>
-            <template if:true= {isCommercial}>
-               
+            <template if:true= {isCommercialTable}>
+             
                 <lightning-datatable data= {opportunitiesProduct}
                                      columns= {columnsCommercial}
                                      key-field="Id"
                                      hide-checkbox-column="false"
                                      onrowaction= {handleRowAction}>
                  </lightning-datatable>
-           </template>           
+                 
+           </template>     
+
         <template if:true= {hasNoProducts}>
-            <p>
-               {PasdeProduit}
-            </p>
+
+           <lightning-formatted-rich-text value={PasdeProduit}></lightning-formatted-rich-text>
+
         </template>
+
         <template if:true= {error}>
             <p class="slds-text-color_error">
                 Une erreur est survenue lors du chargement des produits.

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Message channel for opportunity error events</description>
+    <isExposed>true</isExposed>
+    <lightningMessageFields>
+        <fieldName>errorMessage</fieldName>
+    </lightningMessageFields>
+    <masterLabel>Opportunity Error Message Channel</masterLabel>
+</LightningMessageChannel>
