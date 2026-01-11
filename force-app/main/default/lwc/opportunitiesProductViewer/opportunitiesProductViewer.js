@@ -20,11 +20,11 @@ import USER_ID from '@salesforce/user/Id';
 
 export default class OpportunitiesProductViewer extends  NavigationMixin(LightningElement)  {
 
-userId; // doit être initialisé quelque part avant le wire
-
+userId; 
 connectedCallback() {
-    this.userId = USER_ID; // ou une valeur récupérée d’Apex ou d’un event
+    this.userId = USER_ID;
 }
+
 @api recordId;
 isAdmin = false;
 isCommercial = false;
@@ -171,16 +171,4 @@ navigateToProduct(IdDuProduit__c) {
             }
         });
     }
-
-    renderedCallback() {
-    console.log('products:', this.opportunitiesProduct);
-    console.log('length:', this.opportunitiesProduct?.length);
-    console.log('hasNoProducts:', this.hasNoProducts);
-    console.log('isAdmin:', this.isAdmin);
-    console.log('isCommercial:', this.isCommercial);
-    console.log('isAdminTable:', this.isAdminTable);
-    console.log('isCommercialTable:', this.isCommercialTable);
-    console.log('userId:', this.userId);
-}
-
 }
