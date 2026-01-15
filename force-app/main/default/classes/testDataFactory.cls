@@ -93,7 +93,6 @@ Product2 product = new Product2(
 
     // crée une permission set assignment pour un utilisateur administrateur
 
-@isTest
     public static PermissionSetAssignment CreatePermissionSetAssignmentAdmin() {
 
       User user = createUser();
@@ -119,7 +118,7 @@ return psa;
 
 // crée une permission set assignment pour un utilisateur non administrateur
 
-@isTest
+
     public static PermissionSetAssignment CreatePermissionSetAssignmentNotAdmin() {
 
   User user = createUser();
