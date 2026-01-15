@@ -5,19 +5,23 @@ public with sharing class OpportunityProductControllerTest {
     public static void OpportunityProductControllerTest() {
 
         OpportunityLineItem oli = testDataFactory.createOpportunityLineItem();
+        
+       // Test de la méthode getOpportunityProducts
 
         Test.startTest();
         List<OpportunityLineItem> listOli = OpportunityProductController.getOpportunityProducts(oli.OpportunityId);
         Test.stopTest();
 
-        System.assertequals(true,listOli.size() > 0);
+        System.assertEquals(1, listOli.size());
 
-       
+
+       // Test de la méthode deleteOpportunityProduct
+
         OpportunityProductController.deleteOpportunityProduct(oli.Id);
         
         List<OpportunityLineItem> listOliAfterDelete =
             OpportunityProductController.getOpportunityProducts(oli.OpportunityId);
 
-        System.assertequals(false,listOliAfterDelete.size() > 0);
+        System.assertequals(0,listOliAfterDelete.size());
     }
 }

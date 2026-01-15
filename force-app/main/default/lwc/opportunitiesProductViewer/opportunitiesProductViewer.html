@@ -1,6 +1,9 @@
 <template>
     
     <lightning-card title={titlecard} icon-name="standard:opportunity">
+
+        <!-- Affichage d'un message si un problème de quantité est détecté -->
+
          <template if:true= {quantityProblem}>
                 <p class="orange-text">
                    {MessageOrange}
@@ -9,6 +12,9 @@
                 
                 
             </template>
+
+           <!-- Affichage des tableaux de produits de l'administrateur -->
+
             <template if:true= {isAdminTable}>
                
                 <lightning-datatable data= {opportunitiesProduct}
@@ -19,6 +25,8 @@
                 </lightning-datatable>
               
                 </template>
+          <!-- Affichage des tableaux de produits du commercial -->
+
             <template if:true= {isCommercialTable}>
              
                 <lightning-datatable data= {opportunitiesProduct}
@@ -30,11 +38,15 @@
                  
            </template>     
 
+        <!-- Affichage d'un message si aucun produit n'est associé à l'opportunité -->
+
         <template if:true= {hasNoProducts}>
 
            <lightning-formatted-rich-text value={PasdeProduit}></lightning-formatted-rich-text>
 
         </template>
+
+       <!-- Affichage d'un message en cas d'erreur lors du chargement des produits -->
 
         <template if:true= {error}>
             <p class="slds-text-color_error">

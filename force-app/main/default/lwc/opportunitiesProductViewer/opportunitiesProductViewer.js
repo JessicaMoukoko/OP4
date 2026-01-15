@@ -20,6 +20,8 @@ import USER_ID from '@salesforce/user/Id';
 
 export default class OpportunitiesProductViewer extends  NavigationMixin(LightningElement)  {
 
+ // Récupération de l'ID utilisateur courant
+ 
 userId; 
 connectedCallback() {
     this.userId = USER_ID;
@@ -35,6 +37,8 @@ wiredProfileResults;
 MessageOrange = OrangeMessageError ;
 PasdeProduit = HasNoProducts ;
 titlecard = OpportunityProducts;
+
+              // colonnes pour le profil Commercial
 
 columnsCommercial = [
        { label: productName, fieldName: 'ProductName__c', type: 'text' },
@@ -57,6 +61,8 @@ columnsCommercial = [
             variant: 'border-filled',
             alternativeText: 'Supprimer'
         } }];
+
+             // colonnes pour le profil Administrateur
 
     columnsAdministrateur = [ { label: productName, fieldName: 'ProductName__c', type: 'text' },
         { label: UnitPrice, fieldName: 'UnitPrice', type: 'number' },
@@ -91,9 +97,12 @@ columnsCommercial = [
          } }
     ];
 
+           // Récupération des produits liés à l'opportunité
 
    @wire(getOpportunityProducts, { opportunityId: '$recordId' })
 wiredOpportunities(result) {
+    
+    // on stocke le résultat du wire pour le rafraîchir plus tard
     this.wiredOpportunitiesProductsResults = result;
 
     if (result.data) {
@@ -106,7 +115,7 @@ wiredOpportunities(result) {
             if (hasProblem) {
                 quantityProblem = true;
             }
-            // on retourne une nouvelle version de la ligne avec la classe CSS
+         // on retourne une nouvelle version de la ligne avec la classe CSS
             return {
                 ...row,quantityClass: hasProblem ? 'slds-theme_error slds-text-title_bold' : ''
             };
@@ -121,27 +130,32 @@ wiredOpportunities(result) {
     }
 }
 
+      // Vérification du profil utilisateur grace à la méthode Apex
+
 @wire(isAdminUser, { userId: '$userId' })
     wiredProfileResults({ data }) {
         this.isAdmin = data === true;
         this.isCommercial = data !== true;
     }
+     // propriétés calculées pour déterminer l'affichage des tableaux
 
-get hasNoProducts() {
+ get hasNoProducts() {
     return this.opportunitiesProduct && this.opportunitiesProduct.length === 0;
 }
 
+   // propriété calculée pour afficher le tableau Commercial 
 
-get isCommercialTable() {
+ get isCommercialTable() {
     return this.isCommercial && !this.hasNoProducts;
 }
-
-get isAdminTable() {
+    // propriété calculée pour afficher le tableau Administrateur
+ get isAdminTable() {
     return this.isAdmin && !this.hasNoProducts;
 }
 
+   // gestion des actions sur les lignes du tableau
 
-handleRowAction(event) {
+ handleRowAction(event) {
     const actionName = event.detail.action.name;
     const row = event.detail.row;
 
@@ -152,6 +166,8 @@ handleRowAction(event) {
         this.navigateToProduct(row.IdDuProduit__c);
     }
 }
+  // suppression d'un produit de l'opportunité 
+
  handleDelete(opportunityLineItemId) {
         deleteOpportunityProduct({ opportunityLineItemId: opportunityLineItemId })
             .then(() => {
@@ -161,7 +177,9 @@ handleRowAction(event) {
                 console.error('Erreur suppression :', error);
             });
     }
-navigateToProduct(IdDuProduit__c) {
+    // navigation vers la page du produit lié au produit de l'opportunité
+
+ navigateToProduct(IdDuProduit__c) {
         this[NavigationMixin.Navigate]({
             type: 'standard__recordPage',
             attributes: {

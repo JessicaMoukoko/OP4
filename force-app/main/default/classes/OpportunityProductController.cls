@@ -1,5 +1,7 @@
 public with sharing class OpportunityProductController {
 
+ // Méthode pour récupérer les produits liés à une opportunité
+
     @AuraEnabled(cacheable=true)
     public static List<OpportunityLineItem> getOpportunityProducts(String opportunityId) {
 
@@ -17,6 +19,8 @@ public with sharing class OpportunityProductController {
         ];
         return ProduitsDeLopportunite;
     }
+
+    // Méthode pour supprimer un produit d'une opportunité
     
     @AuraEnabled
 public static void deleteOpportunityProduct(Id opportunityLineItemId) {

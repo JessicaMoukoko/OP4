@@ -1,6 +1,8 @@
 @isTest
 public with sharing class testDataFactory {
 
+        // Crée un utilisateur de test avec le profil "System Administrator"
+
     public static User createUser() {
       Profile p = [
         SELECT Id
@@ -8,6 +10,8 @@ public with sharing class testDataFactory {
         WHERE Name = 'System Administrator'
         LIMIT 1
     ];
+      // Crée l'utilisateur avec les champs obligatoires
+
     User user = new User(
         LastName = 'User Test',
         Username = 'testuser' + System.currentTimeMillis() + '@gmail.com',
@@ -23,6 +27,8 @@ public with sharing class testDataFactory {
     return user ;
 
     }
+
+     // Crée un produit de test
 
     public static Product2 createProduct() {
 Product2 product = new Product2(
@@ -52,7 +58,8 @@ Product2 product = new Product2(
 // Crée une Opportunity avec le Pricebook Standard
 
     public static Opportunity createOpportunity() {
-        // Récupérer le Pricebook Standard
+
+        // Récupérer le Pricebook standard (méthode standard de Salesforce)
 
          Id standardPbId = Test.getStandardPricebookId();
 
@@ -60,14 +67,15 @@ Product2 product = new Product2(
             Name = 'Test Opportunity ',
             CloseDate = Date.today(),
             StageName = 'Prospecting',
-            Pricebook2Id = standardPbId // Obligatoire !
+            Pricebook2Id = standardPbId // Obligatoire pour ajouter des produits à l'opportunité
         );
         insert opp;
         return opp;
     }
   
 
-   // Crée un OpportunityLineItem correctement lié
+      // Crée un OpportunityLineItem correctement lié
+
     public static OpportunityLineItem createOpportunityLineItem() {
         Product2 product = createProduct();
         PricebookEntry pbe = createPricebookEntry(product);
@@ -83,43 +91,46 @@ Product2 product = new Product2(
         return oli;
     }
 
+    // crée une permission set assignment pour un utilisateur administrateur
 
-     @isTest
+@isTest
     public static PermissionSetAssignment CreatePermissionSetAssignmentAdmin() {
 
-User user = createUser();
-Id userId = user.Id;
+      User user = createUser();
+      Id userId = user.Id; // on récupère l'Id de l'utilisateur créé
 
-String permSetApiName = 'Admin';
+     String permSetApiName = 'Admin';
 
-PermissionSet ps = [
-    SELECT Id,Name
-    FROM PermissionSet
-    WHERE Name = :permSetApiName
-    LIMIT 1
-];
+     PermissionSet ps = [
+        SELECT Id,Name
+        FROM PermissionSet
+        WHERE Name = :permSetApiName
+        LIMIT 1
+      ];
 
-PermissionSetAssignment psa = new PermissionSetAssignment(
+   PermissionSetAssignment psa = new PermissionSetAssignment(
     AssigneeId = userId,
     PermissionSetId = ps.Id
-);
+   );
 
 insert psa;
 return psa;
 }
 
+// crée une permission set assignment pour un utilisateur non administrateur
+
 @isTest
     public static PermissionSetAssignment CreatePermissionSetAssignmentNotAdmin() {
 
-User user = createUser();
-Id userId = user.Id;
+  User user = createUser();
+  Id userId = user.Id;
 
-String permSetApiName = 'NotAdmin';
+  String permSetApiName = 'NotAdmin';
 
-PermissionSet ps = [
-    SELECT Id,Name
-    FROM PermissionSet
-    WHERE Name = :permSetApiName
+  PermissionSet ps = [
+     SELECT Id,Name
+     FROM PermissionSet
+     WHERE Name = :permSetApiName
     LIMIT 1
 ];
 

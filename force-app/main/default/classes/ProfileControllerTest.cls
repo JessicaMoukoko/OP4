@@ -1,5 +1,8 @@
 @isTest
 public with sharing class ProfileControllerTest {
+
+    // Test de la méthode isAdminUser
+
     @isTest
     public static void IsAdminUserTest() {
 
@@ -13,6 +16,10 @@ Test.stopTest();
 System.assertequals(true,isAdmin);
 
 }
+
+// Test de la méthode isAdminUser pour un utilisateur non administrateur
+
+    @isTest
 public static void IsNotAdminUserTest() {
 
 User user = testDataFactory.createUser();
