@@ -1,60 +1,38 @@
 <template>
-    
     <lightning-card title={titlecard} icon-name="standard:opportunity">
-
         <!-- Affichage d'un message si un problème de quantité est détecté -->
-
          <template if:true= {quantityProblem}>
                 <p class="orange-text">
-                   {MessageOrange}
-                   
-                </p>
-                
-                
+                   {MessageOrange}                   
+                </p>             
             </template>
-
            <!-- Affichage des tableaux de produits de l'administrateur -->
-
             <template if:true= {isAdminTable}>
-               
                 <lightning-datatable data= {opportunitiesProduct}
                                      columns= {columnsAdministrateur}
                                      key-field="Id"
                                      hide-checkbox-column="false"
                                      onrowaction= {handleRowAction}>
                 </lightning-datatable>
-              
                 </template>
           <!-- Affichage des tableaux de produits du commercial -->
-
             <template if:true= {isCommercialTable}>
-             
                 <lightning-datatable data= {opportunitiesProduct}
                                      columns= {columnsCommercial}
                                      key-field="Id"
                                      hide-checkbox-column="false"
                                      onrowaction= {handleRowAction}>
-                 </lightning-datatable>
-                 
+                 </lightning-datatable>  
            </template>     
-
         <!-- Affichage d'un message si aucun produit n'est associé à l'opportunité -->
-
         <template if:true= {hasNoProducts}>
-
            <lightning-formatted-rich-text value={PasdeProduit}></lightning-formatted-rich-text>
-
         </template>
-
        <!-- Affichage d'un message en cas d'erreur lors du chargement des produits -->
-
         <template if:true= {error}>
             <p class="slds-text-color_error">
                 Une erreur est survenue lors du chargement des produits.
             </p>
         </template>
-        
-           
-       
     </lightning-card>
 </template>
